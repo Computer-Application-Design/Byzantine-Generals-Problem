@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  commander:
+    build:
+      context: .
+      dockerfile: ./Byzantine_commander/Dockerfile
+    container_name: commander_con
+    volumes:
+      - ./log_volume:/app/input
+
+  general1:
+    build:
+      context: .
+      dockerfile: ./Byzantine_general1/Dockerfile
+    container_name: general1_con
+    volumes:
+      - ./log_volume:/app/input
+
+  general2:
+    build:
+      context: .
+      dockerfile: ./Byzantine_general2/Dockerfile
+    container_name: general2_con
+    volumes:
+      - ./log_volume:/app/input
+  
+  general3:
+    build:
+      context: .
+      dockerfile: ./Byzantine_byzantineNode/Dockerfile
+    container_name: general3_con
+    volumes:
+      - ./log_volume:/app/input
