@@ -4,31 +4,39 @@ services:
   commander:
     build:
       context: .
-      dockerfile: ./Byzantine_commander/Dockerfile
-    container_name: commander_con
+      dockerfile: ./Commander/Dockerfile
+    container_name: com_container
     volumes:
       - ./log_volume:/app/input
 
   general1:
     build:
       context: .
-      dockerfile: ./Byzantine_general1/Dockerfile
-    container_name: general1_con
+      dockerfile: ./General1/Dockerfile
+    container_name: g1_container
     volumes:
       - ./log_volume:/app/input
 
   general2:
     build:
       context: .
-      dockerfile: ./Byzantine_general2/Dockerfile
-    container_name: general2_con
+      dockerfile: ./General2/Dockerfile
+    container_name: g2_container
     volumes:
       - ./log_volume:/app/input
   
   general3:
     build:
       context: .
-      dockerfile: ./Byzantine_byzantineNode/Dockerfile
-    container_name: general3_con
+      dockerfile: ./ByzantineNode/Dockerfile
+    container_name: g3_container
+    volumes:
+      - ./log_volume:/app/input
+
+  general4:
+    build:
+      context: .
+      dockerfile: ./General4/Dockerfile
+    container_name: g4_container
     volumes:
       - ./log_volume:/app/input
