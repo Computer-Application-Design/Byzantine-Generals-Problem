@@ -26,34 +26,36 @@ class Commander {
     		socket = new DatagramSocket(PORT);
     		System.out.println("General을 기다리는 중...");
     		
-    		InetAddress hostAddr = InetAddress.getByName("255.255.255.255");
-    		
     		while(true) {
     			packet = new DatagramPacket(buf, buf.length);
     			socket.receive(packet);
+    			String account = new String(packet.getData());
+    			System.out.println(account);
+    			nodeNum++;
     			
-    			if(new String(packet.getData()) == "1") {
-    				System.out.println(nodeNum++);
-    			}
-    				
-    			
-    			if(nodeNum == 3)
+    			if(nodeNum == 1)
     				break;
     		}
     		
-    		while(nodeNum == 3) {
+    		
+    		
+    		
+    		while(true) {
+    			InetAddress hostAddr = packet.getAddress();
         		try {
         			if(bc==1) {
         				System.out.println("합의를 시작합니다.");
         				broadcast(socket, msg, hostAddr);
         				bc = 0;
         			}
+        			byte[] recvBuf = new byte[1000];
+        			
         			
         			mutex.acquire();
-
-        			packet = new DatagramPacket(buf, buf.length);
-            		socket.receive(packet);
-            		String str = new String(packet.getData());
+        			
+        			DatagramPacket dPacket = new DatagramPacket(recvBuf, recvBuf.length);
+            		socket.receive(dPacket);
+            		String str = new String(dPacket.getData());
             		
             		System.out.println(str);
             		
@@ -62,16 +64,17 @@ class Commander {
             			byzantine++;
             			agreement.replace('f', byzantine);
             		}
-            			
             		
+            		nodeNum--;
             		mutex.release();
         		}catch(InterruptedException e) {
         			e.printStackTrace();
         		}
-        		if(agreement.size() == 3)
+        		if(nodeNum == 0)
         			break;
     		}
     		int result = agreement.get('n') - ( 3*agreement.get('f') + 1 );
+    		System.out.println(result);
     		
     		if(result >= 0)
     			System.out.println("합의 결과: 합의 가능");
@@ -88,8 +91,9 @@ class Commander {
     	sock.setBroadcast(true);
 
     	byte[] buffer = broadcastMessage.getBytes();
-    	System.out.println("합의 메세지 전송");
+    	
     	packet = new DatagramPacket(buffer, buffer.length, address, PORT);
     	sock.send(packet);
+    	System.out.println("합의 메세지 전송");
     }
 }
